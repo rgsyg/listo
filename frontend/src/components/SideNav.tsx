@@ -1,0 +1,16 @@
+import SideNavMenu from "./SideNavMenu";
+
+export default function SideNav() {
+  return (
+    <div className="bg-dark col-3 p-4 text-light d-flex flex-column justify-content-between">
+      <section>
+        <h2>Listo</h2>
+        <hr className="bg-light opacity-100" style={{ height: "2px" }} />
+        <SideNavMenu />
+      </section>
+      <button className="btn btn-success mb-4 fs-4 py-3 fw-bold">
+        NEW TO-DO
+      </button>
+    </div>
+  );
+}
