@@ -4,7 +4,7 @@ import SideNav from "./components/SideNav";
 function App() {
   return (
     <div className="bg-dark min-vh-100">
-      <div className="row min-vh-100 g-xl-0">
+      <div className="row min-vh-100 g-0">
         <SideNav />
         <MainContent />
       </div>

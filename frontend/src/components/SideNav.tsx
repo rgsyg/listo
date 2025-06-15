@@ -8,7 +8,7 @@ export default function SideNav() {
         <hr className="bg-light opacity-100" style={{ height: "2px" }} />
         <SideNavMenu />
       </section>
-      <button className="btn btn-success mb-4 fs-4 py-3 fw-bold">
+      <button className="btn btn-success mb-4 fs-4 py-3 fw-bold border border-black border-2">
         NEW TO-DO
       </button>
     </div>
