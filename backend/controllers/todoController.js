@@ -1,8 +1,9 @@
 import pool from "../config/db.js"
 
 export const getTodos = async (req, res) => {
+    const { user_id } = req.query
     try {
-        const response = await pool.query("SELECT * FROM todo")
+        const response = await pool.query("SELECT * FROM todo WHERE user_id=$1", [user_id])
         res.status(200).json(response.rows)
     } catch (error) {
         console.error(error.message);
@@ -23,10 +24,9 @@ export const getTodo = async (req, res) => {
 
 export const createTodo = async (req, res) => {
     try {
-        const { userID, title, description, isCompleted,
-            updatedAt, dueDate, archived, priority } = req.body
+        const { user_id, title, description, due_date, priority } = req.body
 
-        const response = await pool.query(`INSERT INTO todo (user_id, title, description, is_completed, updated_at, due_date, archived, priority) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`, [userID, title, description, isCompleted, updatedAt, dueDate, archived, priority])
+        const response = await pool.query(`INSERT INTO todo (user_id, title, description, due_date, priority) VALUES ($1, $2, $3, $4, $5) RETURNING *`, [user_id, title, description, due_date, priority])
 
         res.status(201).json(response.rows[0])
     } catch (error) {
@@ -38,11 +38,11 @@ export const createTodo = async (req, res) => {
 export const updateTodo = async (req, res) => {
     try {
         const { id } = req.params
-        const { userID, title, description, isCompleted,
-            dueDate, archived, priority } = req.body
-        const updatedAt = new Date().toISOString()
+        const { user_id, title, description, is_completed,
+            due_date, archived, priority } = req.body
+        const updated_at = new Date().toISOString()
 
-        const response = await pool.query("UPDATE todo SET title=$1, description=$2, is_completed=$3, updated_at=$4, due_date=$5, archived=$6, priority=$7 WHERE id=$8 AND user_id=$9 RETURNING *", [title, description, isCompleted, updatedAt, dueDate, archived, priority, id, userID])
+        const response = await pool.query("UPDATE todo SET title=$1, description=$2, is_completed=$3, updated_at=$4, due_date=$5, archived=$6, priority=$7 WHERE id=$8 AND user_id=$9 RETURNING *", [title, description, is_completed, updated_at, due_date, archived, priority, id, user_id])
 
         if (response.rows.length === 0) {
             return res.status(304).json({ error: "No change" });
@@ -58,9 +58,9 @@ export const updateTodo = async (req, res) => {
 export const deleteTodo = async (req, res) => {
     try {
         const { id } = req.params
-        const { userID } = req.body
+        const { user_id } = req.body
 
-        const response = await pool.query("DELETE FROM todo WHERE id=$1 AND user_id=$2", [id, userID])
+        const response = await pool.query("DELETE FROM todo WHERE id=$1 AND user_id=$2", [id, user_id])
 
         if (response.rows.length === 0) {
             return res.status(404).json({ error: "Todo not found" });

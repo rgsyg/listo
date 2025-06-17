@@ -1,3 +1,4 @@
+import NewTodoForm from "./NewTodoForm";
 import SideNavMenu from "./SideNavMenu";
 
 export default function SideNav() {
@@ -8,9 +9,15 @@ export default function SideNav() {
         <hr className="bg-light opacity-100" style={{ height: "2px" }} />
         <SideNavMenu />
       </section>
-      <button className="btn btn-success mb-4 fs-4 py-3 fw-bold border border-black border-2">
+      <button
+        className="btn btn-success mb-4 fs-4 py-3 fw-bold border border-black border-2"
+        data-bs-toggle="modal"
+        data-bs-target="#todoModal"
+        data-bs-whatever="@getbootstrap"
+      >
         NEW TO-DO
       </button>
+      <NewTodoForm />
     </div>
   );
 }
