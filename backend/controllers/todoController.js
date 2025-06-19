@@ -25,8 +25,9 @@ export const getTodo = async (req, res) => {
 export const createTodo = async (req, res) => {
     try {
         const { user_id, title, description, due_date, priority } = req.body
+        const sanitizedDueDate = due_date === "" ? null : due_date;
 
-        const response = await pool.query(`INSERT INTO todo (user_id, title, description, due_date, priority) VALUES ($1, $2, $3, $4, $5) RETURNING *`, [user_id, title, description, due_date, priority])
+        const response = await pool.query(`INSERT INTO todo (user_id, title, description, due_date, priority) VALUES ($1, $2, $3, $4, $5) RETURNING *`, [user_id, title, description, sanitizedDueDate, priority])
 
         res.status(201).json(response.rows[0])
     } catch (error) {

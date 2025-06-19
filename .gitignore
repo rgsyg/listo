@@ -128,3 +128,4 @@ dist
 
 # Others
 api_test.http
+*.sql
