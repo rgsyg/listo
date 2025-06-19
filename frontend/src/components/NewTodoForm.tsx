@@ -58,10 +58,10 @@ export default function NewTodoForm() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="due-date" className="col-form-label me-2">
+                <label htmlFor="due_date" className="col-form-label me-2">
                   Due Date:
                 </label>
-                <input type="date" id="due-date" name="due-date" />
+                <input type="date" id="due_date" name="due_date" />
               </div>
 
               <label className="col-form-label">Priority:</label>

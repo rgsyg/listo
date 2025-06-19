@@ -35,14 +35,42 @@ export default function MainContent() {
                     {new Date(todo.created_at).toLocaleString()}
                   </span>
                 </h5>
-                <p className="card-text fw-normal">{todo.description}</p>
-                <div className="row row-cols-6 gap-3 g-0">
-                  <button className="col btn btn-danger">
-                    <i className="bi bi-check2 fs-5" />
-                  </button>
-                  <button className="col btn btn-danger">
-                    <i className="bi bi-pencil-square fs-5" />
-                  </button>
+                <p className="card-text fw-normal pb-3">{todo.description}</p>
+                <div className="row g-0 align-items-end">
+                  <div className="col d-flex gap-3">
+                    <button
+                      className="btn btn-light border border-2 border-black"
+                      style={{ padding: "0.10rem 0.45rem" }}
+                    >
+                      <i
+                        className="bi bi-check2"
+                        style={{ fontSize: "1rem" }}
+                      />
+                    </button>
+                    <button
+                      className="btn btn-light border border-2 border-black"
+                      style={{ padding: "0.10rem 0.45rem" }}
+                    >
+                      <i
+                        className="bi bi-pencil"
+                        style={{ fontSize: "1rem" }}
+                      />
+                    </button>
+                    <button
+                      className="btn btn-light border border-2 border-black"
+                      style={{ padding: "0.10rem 0.45rem" }}
+                    >
+                      <i
+                        className="bi bi-three-dots"
+                        style={{ fontSize: "1rem" }}
+                      />
+                    </button>
+                  </div>
+                  <div className="col text-end text-muted fw-normal fs-6">
+                    {todo.due_date
+                      ? new Date(todo.due_date).toLocaleString()
+                      : "unset"}
+                  </div>
                 </div>
               </div>
             </div>
