@@ -1,4 +1,5 @@
 import MainContent from "./components/MainContent";
+import NewTodoForm from "./components/NewTodoForm";
 import SideNav from "./components/SideNav";
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
         <SideNav />
         <MainContent />
       </div>
+      <NewTodoForm />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import pool from "../config/db.js"
 export const getTodos = async (req, res) => {
     const { user_id } = req.query
     try {
-        const response = await pool.query("SELECT * FROM todo WHERE user_id=$1", [user_id])
+        const response = await pool.query("SELECT * FROM todo WHERE user_id=$1 ORDER BY id DESC", [user_id])
         res.status(200).json(response.rows)
     } catch (error) {
         console.error(error.message);
@@ -13,8 +13,13 @@ export const getTodos = async (req, res) => {
 
 export const getTodo = async (req, res) => {
     try {
-        const { id } = await req.params
-        const response = await pool.query(`SELECT * FROM todo WHERE id=$1`, [id])
+        const { id } = req.params
+        const { user_id } = req.query
+        const response = await pool.query(`SELECT * FROM todo WHERE id=$1 AND user_id=$2`, [id, user_id])
+        if (response.rows.length === 0) {
+            return res.status(404).json({ error: "Todo not found" });
+        }
+
         res.status(200).json(response.rows[0])
     } catch (error) {
         console.error(error.message);

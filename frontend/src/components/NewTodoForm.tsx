@@ -61,7 +61,7 @@ export default function NewTodoForm() {
                 <label htmlFor="due_date" className="col-form-label me-2">
                   Due Date:
                 </label>
-                <input type="date" id="due_date" name="due_date" />
+                <input type="date" id="due_date" name="due_date" min={new Date().toISOString().split("T")[0]} />
               </div>
 
               <label className="col-form-label">Priority:</label>
@@ -71,7 +71,7 @@ export default function NewTodoForm() {
                     className="form-check-input me-1"
                     type="radio"
                     name="priority"
-                    value="Low"
+                    value="low"
                     id="priority-low"
                     defaultChecked
                   />
@@ -84,7 +84,7 @@ export default function NewTodoForm() {
                     className="form-check-input me-1"
                     type="radio"
                     name="priority"
-                    value="Med"
+                    value="med"
                     id="priority-med"
                   />
                   <label className="form-check-label" htmlFor="priority-med">
@@ -96,7 +96,7 @@ export default function NewTodoForm() {
                     className="form-check-input me-1"
                     type="radio"
                     name="priority"
-                    value="High"
+                    value="high"
                     id="priority-high"
                   />
                   <label className="form-check-label" htmlFor="priority-high">

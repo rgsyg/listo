@@ -1,8 +1,18 @@
 import { useEffect } from "react";
-import useTodoStore, { type Todo } from "../store/useTodoStore";
+import useTodoStore, { type Priority, type Todo } from "../store/useTodoStore";
 
 export default function MainContent() {
   const { todos, fetchTodos } = useTodoStore();
+
+  const createBadge = (priority: Priority) => {
+    if (priority === "low") {
+      return <span className="badge text-bg-info">Low</span>
+    } else if (priority === "med") {
+      return <span className="badge text-bg-warning">Med</span>
+    } else {
+      return <span className="badge text-bg-danger">High</span>
+    }
+  }
 
   useEffect(() => {
     fetchTodos();
@@ -29,13 +39,14 @@ export default function MainContent() {
               key={todo.id}
             >
               <div className="card-body p-0">
-                <h5 className="card-title d-flex justify-content-between">
+                <h5 className="card-title">
                   <span className="fw-bold">{todo.title}</span>
-                  <span className="fs-6 text-muted">
-                    {new Date(todo.created_at).toLocaleString()}
-                  </span>
                 </h5>
-                <p className="card-text fw-normal pb-3">{todo.description}</p>
+                <div className="d-flex justify-content-between align-items-center fs-6">
+                  {createBadge(todo.priority)}
+                  <p className="text-muted m-0 fw-normal" style={{ fontSize: "0.90rem" }}>{"Created on " + new Date(todo.created_at).toLocaleString().split(",")[0]}</p>
+                </div>
+                <p className="card-text fw-normal pb-3 pt-2">{todo.description}</p>
                 <div className="row g-0 align-items-end">
                   <div className="col d-flex gap-3">
                     <button
@@ -66,10 +77,10 @@ export default function MainContent() {
                       />
                     </button>
                   </div>
-                  <div className="col text-end text-muted fw-normal fs-6">
+                  <div className="col text-end text-muted fw-normal" style={{ fontSize: "0.90rem" }}>
                     {todo.due_date
-                      ? new Date(todo.due_date).toLocaleString()
-                      : "unset"}
+                      ? "Due on " + new Date(todo.due_date).toLocaleString().split(",")[0]
+                      : "No deadline"}
                   </div>
                 </div>
               </div>
