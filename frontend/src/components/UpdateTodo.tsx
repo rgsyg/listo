@@ -1,8 +1,7 @@
-import type { NewTodo } from "../store/useTodoStore";
+import type { Priority, Todo } from "../store/useTodoStore";
 import useTodoStore from "../store/useTodoStore";
-import { Modal } from "bootstrap";
 
-function formDataToObject(formData: FormData): NewTodo {
+function formDataToObject(formData: FormData): Todo {
   const obj: any = {};
   formData.forEach((value, key) => {
     obj[key] = value;
@@ -10,15 +9,15 @@ function formDataToObject(formData: FormData): NewTodo {
   return obj;
 }
 
-export default function NewTodoForm() {
-  const { createTodo } = useTodoStore();
+export default function UpdateTodo() {
+  const { todo, setTodo, updateTodo } = useTodoStore();
 
   return (
-    <div className="modal fade" id="todoModal" tabIndex={-1}>
+    <div className="modal fade" id="updateModal" tabIndex={-1}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h1 className="modal-title fs-5">ADD NEW TO-DO</h1>
+            <h1 className="modal-title fs-5">UPDATE TO-DO</h1>
             <button
               type="button"
               className="btn-close"
@@ -28,12 +27,12 @@ export default function NewTodoForm() {
           </div>
           <div className="modal-body">
             <form
-              id="todo-form"
+              id="todo-update-form"
               onSubmit={async (e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
                 const todoData = formDataToObject(formData);
-                await createTodo(todoData);
+                await updateTodo({ ...todoData, id: todo.id });
               }}
             >
               <div className="mb-3">
@@ -45,6 +44,8 @@ export default function NewTodoForm() {
                   name="title"
                   className="form-control"
                   id="todo-title"
+                  value={todo.title}
+                  onChange={(e) => setTodo({ title: e.target.value })}
                 />
               </div>
               <div className="mb-3">
@@ -55,6 +56,8 @@ export default function NewTodoForm() {
                   className="form-control"
                   name="description"
                   id="todo-description"
+                  value={todo.description}
+                  onChange={(e) => setTodo({ description: e.target.value })}
                 />
               </div>
 
@@ -67,6 +70,15 @@ export default function NewTodoForm() {
                   id="due_date"
                   name="due_date"
                   min={new Date().toISOString().split("T")[0]}
+                  value={
+                    todo.due_date
+                      ? new Date(todo.due_date).toLocaleDateString("en-CA")
+                      : ""
+                  }
+                  onChange={(e) => {
+                    const selectedDate = new Date(e.target.value);
+                    setTodo({ due_date: selectedDate });
+                  }}
                 />
               </div>
 
@@ -79,7 +91,10 @@ export default function NewTodoForm() {
                     name="priority"
                     value="low"
                     id="priority-low"
-                    defaultChecked
+                    checked={todo.priority === "low"}
+                    onChange={(e) =>
+                      setTodo({ priority: e.target.value as Priority })
+                    }
                   />
                   <label className="form-check-label" htmlFor="priority-low">
                     Low
@@ -92,6 +107,10 @@ export default function NewTodoForm() {
                     name="priority"
                     value="med"
                     id="priority-med"
+                    checked={todo.priority === "med"}
+                    onChange={(e) =>
+                      setTodo({ priority: e.target.value as Priority })
+                    }
                   />
                   <label className="form-check-label" htmlFor="priority-med">
                     Med
@@ -104,6 +123,10 @@ export default function NewTodoForm() {
                     name="priority"
                     value="high"
                     id="priority-high"
+                    checked={todo.priority === "high"}
+                    onChange={(e) =>
+                      setTodo({ priority: e.target.value as Priority })
+                    }
                   />
                   <label className="form-check-label" htmlFor="priority-high">
                     High
@@ -123,10 +146,10 @@ export default function NewTodoForm() {
             <button
               type="submit"
               className="btn btn-primary"
-              form="todo-form"
+              form="todo-update-form"
               data-bs-dismiss="modal"
             >
-              Create to-do
+              Update to-do
             </button>
           </div>
         </div>

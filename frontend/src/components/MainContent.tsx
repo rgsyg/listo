@@ -2,17 +2,17 @@ import { useEffect } from "react";
 import useTodoStore, { type Priority, type Todo } from "../store/useTodoStore";
 
 export default function MainContent() {
-  const { todos, fetchTodos, deleteTodo } = useTodoStore();
+  const { todos, fetchTodos, currentTodo, deleteTodo } = useTodoStore();
 
   const createBadge = (priority: Priority) => {
     if (priority === "low") {
-      return <span className="badge text-bg-info">Low</span>
+      return <span className="badge text-bg-info">Low</span>;
     } else if (priority === "med") {
-      return <span className="badge text-bg-warning">Med</span>
+      return <span className="badge text-bg-warning">Med</span>;
     } else {
-      return <span className="badge text-bg-danger">High</span>
+      return <span className="badge text-bg-danger">High</span>;
     }
-  }
+  };
 
   useEffect(() => {
     fetchTodos();
@@ -44,9 +44,17 @@ export default function MainContent() {
                 </h5>
                 <div className="d-flex justify-content-between align-items-center fs-6">
                   {createBadge(todo.priority)}
-                  <p className="text-muted m-0 fw-normal" style={{ fontSize: "0.90rem" }}>{"Created on " + new Date(todo.created_at).toLocaleString().split(",")[0]}</p>
+                  <p
+                    className="text-muted m-0 fw-normal"
+                    style={{ fontSize: "0.90rem" }}
+                  >
+                    {"Created on " +
+                      new Date(todo.created_at).toLocaleString().split(",")[0]}
+                  </p>
                 </div>
-                <p className="card-text fw-normal pb-3 pt-2">{todo.description}</p>
+                <p className="card-text fw-normal pb-3 pt-2">
+                  {todo.description}
+                </p>
                 <div className="row g-0 align-items-end">
                   <div className="col d-flex gap-3">
                     <button
@@ -61,6 +69,9 @@ export default function MainContent() {
                     <button
                       className="btn btn-light border border-2 border-black"
                       style={{ padding: "0.10rem 0.45rem" }}
+                      onClick={() => currentTodo(todo.id)}
+                      data-bs-toggle="modal"
+                      data-bs-target="#updateModal"
                     >
                       <i
                         className="bi bi-pencil"
@@ -69,7 +80,8 @@ export default function MainContent() {
                     </button>
                     <div className="dropdown">
                       <button
-                        className="btn btn-light border border-2 border-black dropdown-toggle" data-bs-toggle="dropdown"
+                        className="btn btn-light border border-2 border-black dropdown-toggle"
+                        data-bs-toggle="dropdown"
                         style={{ padding: "0.10rem 0.45rem" }}
                       >
                         <i
@@ -78,14 +90,29 @@ export default function MainContent() {
                         />
                       </button>
                       <ul className="dropdown-menu">
-                        <li><button className="btn btn-light dropdown-item">Archive</button></li>
-                        <li><button className="btn btn-light dropdown-item" onClick={() => deleteTodo(todo.id)}>Delete</button></li>
+                        <li>
+                          <button className="btn btn-light dropdown-item">
+                            Archive
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            className="btn btn-light dropdown-item"
+                            onClick={() => deleteTodo(todo.id)}
+                          >
+                            Delete
+                          </button>
+                        </li>
                       </ul>
                     </div>
                   </div>
-                  <div className="col text-end text-muted fw-normal" style={{ fontSize: "0.90rem" }}>
+                  <div
+                    className="col text-end text-muted fw-normal"
+                    style={{ fontSize: "0.90rem" }}
+                  >
                     {todo.due_date
-                      ? "Due on " + new Date(todo.due_date).toLocaleString().split(",")[0]
+                      ? "Due on " +
+                        new Date(todo.due_date).toLocaleString().split(",")[0]
                       : "No deadline"}
                   </div>
                 </div>

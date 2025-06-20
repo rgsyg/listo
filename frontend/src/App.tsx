@@ -1,6 +1,7 @@
 import MainContent from "./components/MainContent";
 import NewTodoForm from "./components/NewTodoForm";
 import SideNav from "./components/SideNav";
+import UpdateTodo from "./components/UpdateTodo";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <MainContent />
       </div>
       <NewTodoForm />
+      <UpdateTodo />
     </div>
   );
 }

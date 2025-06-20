@@ -21,8 +21,10 @@ export type NewTodo = Omit<Todo, "id" | "created_at" | "updated_at">;
 type TodoStore = {
   todos: Todo[];
   todo: Todo;
+  setTodo: (updatedTodo: Partial<Todo>) => void;
   fetchTodos: () => void;
   fetchTodo: (id: number) => void;
+  currentTodo: (id: number) => void;
   createTodo: (formData: NewTodo) => void;
   updateTodo: (FormData: Todo) => void;
   deleteTodo: (id: number) => void;
@@ -60,6 +62,8 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     priority: "low",
   },
 
+  setTodo: (updatedTodo: Partial<Todo>) => set((state) => ({ todo: { ...state.todo, ...updatedTodo } })),
+
   fetchTodos: async () => {
     let userID = localStorage.getItem("user-id");
     if (!userID) {
@@ -94,6 +98,15 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     }
   },
 
+  currentTodo: (id: number) => {
+    try {
+      const response = get().todos.find((todo) => todo.id === id) as Todo
+      set({ todo: response })
+    } catch (error: any) {
+      console.error(error.message)
+    }
+  },
+
   createTodo: async (formData: NewTodo) => {
     let userID = localStorage.getItem("user-id");
     if (!userID) {
@@ -122,7 +135,8 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     formData.user_id = userID;
 
     try {
-      const response = await axios.put(`${BASE_URL}/api/todos/${formData.id}`, formData);
+      await axios.put(`${BASE_URL}/api/todos/${formData.id}`, formData);
+      get().fetchTodos()
     } catch (error: any) {
       console.error(error.message);
     }

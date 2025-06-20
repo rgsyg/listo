@@ -12,7 +12,6 @@ export default function SideNav() {
         className="btn btn-success mb-4 fs-4 py-3 fw-bold border border-black border-2"
         data-bs-toggle="modal"
         data-bs-target="#todoModal"
-        data-bs-whatever="@getbootstrap"
       >
         NEW TO-DO
       </button>
