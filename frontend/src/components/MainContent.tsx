@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import useTodoStore, { type Priority, type Todo } from "../store/useTodoStore";
 
 export default function MainContent() {
-  const { todos, fetchTodos } = useTodoStore();
+  const { todos, fetchTodos, deleteTodo } = useTodoStore();
 
   const createBadge = (priority: Priority) => {
     if (priority === "low") {
@@ -67,15 +67,21 @@ export default function MainContent() {
                         style={{ fontSize: "1rem" }}
                       />
                     </button>
-                    <button
-                      className="btn btn-light border border-2 border-black"
-                      style={{ padding: "0.10rem 0.45rem" }}
-                    >
-                      <i
-                        className="bi bi-three-dots"
-                        style={{ fontSize: "1rem" }}
-                      />
-                    </button>
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-light border border-2 border-black dropdown-toggle" data-bs-toggle="dropdown"
+                        style={{ padding: "0.10rem 0.45rem" }}
+                      >
+                        <i
+                          className="bi bi-three-dots"
+                          style={{ fontSize: "1rem" }}
+                        />
+                      </button>
+                      <ul className="dropdown-menu">
+                        <li><button className="btn btn-light dropdown-item">Archive</button></li>
+                        <li><button className="btn btn-light dropdown-item" onClick={() => deleteTodo(todo.id)}>Delete</button></li>
+                      </ul>
+                    </div>
                   </div>
                   <div className="col text-end text-muted fw-normal" style={{ fontSize: "0.90rem" }}>
                     {todo.due_date

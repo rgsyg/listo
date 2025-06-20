@@ -25,6 +25,7 @@ type TodoStore = {
   fetchTodo: (id: number) => void;
   createTodo: (formData: NewTodo) => void;
   updateTodo: (FormData: Todo) => void;
+  deleteTodo: (id: number) => void;
 };
 
 const BASE_URL =
@@ -126,6 +127,16 @@ const useTodoStore = create<TodoStore>((set, get) => ({
       console.error(error.message);
     }
   },
+
+  deleteTodo: async (id: number) => {
+    const userID = localStorage.getItem("user-id")
+    try {
+      await axios.delete(`${BASE_URL}/api/todos/${id}`, { params: { user_id: userID } });
+      get().fetchTodos();
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
 
 }));
 
