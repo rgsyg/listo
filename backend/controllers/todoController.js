@@ -14,7 +14,7 @@ export const getTodos = async (req, res) => {
 export const getTodo = async (req, res) => {
     try {
         const { id } = await req.params
-        const response = await pool.query(`SELECT * FROM todo WHERE id=${id}`)
+        const response = await pool.query(`SELECT * FROM todo WHERE id=$1`, [id])
         res.status(200).json(response.rows[0])
     } catch (error) {
         console.error(error.message);
