@@ -1,6 +1,5 @@
 import type { NewTodo } from "../store/useTodoStore";
 import useTodoStore from "../store/useTodoStore";
-import { Modal } from "bootstrap";
 
 function formDataToObject(formData: FormData): NewTodo {
   const obj: any = {};
