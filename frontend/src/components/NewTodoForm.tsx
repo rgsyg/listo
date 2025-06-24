@@ -1,3 +1,4 @@
+import Modal from "bootstrap/js/dist/modal";
 import type { NewTodo } from "../store/useTodoStore";
 import useTodoStore from "../store/useTodoStore";
 
@@ -30,9 +31,16 @@ export default function NewTodoForm() {
               id="todo-form"
               onSubmit={async (e) => {
                 e.preventDefault();
+                const form = e.target as HTMLFormElement;
                 const formData = new FormData(e.currentTarget);
                 const todoData = formDataToObject(formData);
                 await createTodo(todoData);
+                form.reset();
+                const todoModal = document.getElementById("todoModal");
+                if (todoModal) {
+                  const modal = Modal.getOrCreateInstance(todoModal);
+                  modal.hide();
+                }
               }}
             >
               <div className="mb-3">
@@ -44,6 +52,7 @@ export default function NewTodoForm() {
                   name="title"
                   className="form-control"
                   id="todo-title"
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -119,12 +128,7 @@ export default function NewTodoForm() {
             >
               Close
             </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              form="todo-form"
-              data-bs-dismiss="modal"
-            >
+            <button type="submit" className="btn btn-primary" form="todo-form">
               Create to-do
             </button>
           </div>

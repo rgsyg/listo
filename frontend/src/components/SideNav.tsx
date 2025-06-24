@@ -1,3 +1,4 @@
+import Modal from "bootstrap/js/dist/modal";
 import SideNavMenu from "./SideNavMenu";
 
 export default function SideNav() {
@@ -13,8 +14,13 @@ export default function SideNav() {
       </section>
       <button
         className="btn btn-success mb-4 fs-4 py-3 fw-bold border border-black border-2"
-        data-bs-toggle="modal"
-        data-bs-target="#todoModal"
+        onClick={() => {
+          const todoModal = document.getElementById("todoModal");
+          if (todoModal) {
+            const modal = Modal.getOrCreateInstance(todoModal);
+            modal.show();
+          }
+        }}
       >
         NEW TO-DO
       </button>

@@ -1,3 +1,4 @@
+import Modal from "bootstrap/js/dist/modal";
 import type { Priority, Todo } from "../store/useTodoStore";
 import useTodoStore from "../store/useTodoStore";
 
@@ -32,7 +33,18 @@ export default function UpdateTodo() {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
                 const todoData = formDataToObject(formData);
-                await updateTodo({ ...todoData, id: todo.id });
+                if (todoData.due_date === "") todoData.due_date = null;
+                await updateTodo({
+                  ...todoData,
+                  id: todo.id,
+                  is_completed: todo.is_completed,
+                  archived: todo.archived,
+                });
+                const updateModal = document.getElementById("updateModal");
+                if (updateModal) {
+                  const modal = Modal.getOrCreateInstance(updateModal);
+                  modal.hide();
+                }
               }}
             >
               <div className="mb-3">
@@ -46,6 +58,7 @@ export default function UpdateTodo() {
                   id="todo-title"
                   value={todo.title}
                   onChange={(e) => setTodo({ title: e.target.value })}
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -147,7 +160,6 @@ export default function UpdateTodo() {
               type="submit"
               className="btn btn-primary"
               form="todo-update-form"
-              data-bs-dismiss="modal"
             >
               Update to-do
             </button>

@@ -11,7 +11,7 @@ export type Todo = {
   is_completed: boolean;
   created_at: Date;
   updated_at: Date;
-  due_date: Date;
+  due_date: Date | string | null;
   archived: boolean;
   priority: Priority;
 };

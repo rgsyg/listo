@@ -5,8 +5,8 @@ import UpdateTodo from "./components/UpdateTodo";
 
 function App() {
   return (
-    <div className="bg-dark min-vh-100 overflow-x-scroll">
-      <div className="row min-vh-100 g-0">
+    <div className="bg-dark min-vh-100">
+      <div className="row min-vh-100 g-0 row-cols-2">
         <SideNav />
         <MainContent />
       </div>
