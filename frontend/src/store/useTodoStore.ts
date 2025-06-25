@@ -34,7 +34,7 @@ type TodoStore = {
 };
 
 const BASE_URL =
-  import.meta.env.MODE === "development" ? "http://localhost:5000" : "";
+  import.meta.env.MODE === "development" ? "http://localhost:5000" : import.meta.env.VITE_PROD_API_URL || "";
 
 const useTodoStore = create<TodoStore>((set, get) => ({
   todos: [],
