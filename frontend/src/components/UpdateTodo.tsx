@@ -11,7 +11,7 @@ function formDataToObject(formData: FormData): Todo {
 }
 
 export default function UpdateTodo() {
-  const { todo, setTodo, updateTodo } = useTodoStore();
+  const { todo, setTodo, updateTodo, loading } = useTodoStore();
 
   return (
     <div className="modal fade" id="updateModal" tabIndex={-1}>
@@ -162,8 +162,21 @@ export default function UpdateTodo() {
               type="submit"
               className="btn btn-primary"
               form="todo-update-form"
+              disabled={loading}
+              style={{ width: "8em" }}
             >
-              Update to-do
+              {loading ? (
+                <div
+                  className="spinner-border"
+                  style={{
+                    height: "1rem",
+                    width: "1rem",
+                  }}
+                  role="status"
+                />
+              ) : (
+                "Update to-do"
+              )}
             </button>
           </div>
         </div>

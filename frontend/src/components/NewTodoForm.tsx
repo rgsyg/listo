@@ -11,7 +11,7 @@ function formDataToObject(formData: FormData): NewTodo {
 }
 
 export default function NewTodoForm() {
-  const { createTodo } = useTodoStore();
+  const { createTodo, loading } = useTodoStore();
 
   return (
     <div className="modal fade" id="todoModal" tabIndex={-1}>
@@ -128,8 +128,25 @@ export default function NewTodoForm() {
             >
               Close
             </button>
-            <button type="submit" className="btn btn-primary" form="todo-form">
-              Create to-do
+            <button
+              type="submit"
+              className="btn btn-primary"
+              form="todo-form"
+              disabled={loading}
+              style={{ width: "8em" }}
+            >
+              {loading ? (
+                <div
+                  className="spinner-border"
+                  style={{
+                    height: "1rem",
+                    width: "1rem",
+                  }}
+                  role="status"
+                />
+              ) : (
+                "Create to-do"
+              )}
             </button>
           </div>
         </div>

@@ -16,7 +16,7 @@ const breakpointColumnsObj = {
 
 export default function MainContent() {
   const { pathname } = useLocation();
-  const { todos, setTodos, fetchTodos, updateTodo } = useTodoStore();
+  const { todos, setTodos, fetchTodos, updateTodo, loading } = useTodoStore();
 
   useEffect(() => {
     fetchTodos();
@@ -53,7 +53,13 @@ export default function MainContent() {
         <h2>{pathname === "/" ? "Tasks" : "Archived Tasks"}</h2>
         <hr className="opacity-100 bg-black" style={{ height: "2px" }} />
       </header>
-      {pathname === "/" ? (
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : pathname === "/" ? (
         <DndContext onDragEnd={handleDragEnd}>
           <div className="row row-cols-3">
             {columns.map((column) => {

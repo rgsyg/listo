@@ -22,6 +22,7 @@ export type NewTodo = Omit<Todo, "id" | "created_at" | "updated_at">;
 type TodoStore = {
   todos: Todo[];
   todo: Todo;
+  loading: boolean;
   setTodo: (updatedTodo: Todo) => void;
   setTodos: (updatedTodos: Todo[]) => void;
   fetchTodos: () => void;
@@ -37,7 +38,6 @@ const BASE_URL =
 
 const useTodoStore = create<TodoStore>((set, get) => ({
   todos: [],
-
   todo: {
     id: "",
     user_id: "",
@@ -50,11 +50,13 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     archived: false,
     priority: "low",
   },
+  loading: false,
 
   setTodo: (updatedTodo: Todo) => set({ todo: updatedTodo }),
   setTodos: (updatedTodos: Todo[]) => set({ todos: updatedTodos }),
 
   fetchTodos: async () => {
+    set({ loading: true })
     let userID = localStorage.getItem("user-id");
     if (!userID) {
       userID = crypto.randomUUID();
@@ -69,9 +71,11 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     } catch (error: any) {
       console.error(error.message);
     }
+    set({ loading: false })
   },
 
   fetchTodo: async (id: string) => {
+    set({ loading: true })
     let userID = localStorage.getItem("user-id");
     if (!userID) {
       userID = crypto.randomUUID();
@@ -86,6 +90,7 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     } catch (error: any) {
       console.error(error.message)
     }
+    set({ loading: false })
   },
 
   currentTodo: (id: string) => {
@@ -98,6 +103,7 @@ const useTodoStore = create<TodoStore>((set, get) => ({
   },
 
   createTodo: async (formData: NewTodo) => {
+    set({ loading: true })
     let userID = localStorage.getItem("user-id");
     if (!userID) {
       userID = crypto.randomUUID();
@@ -114,9 +120,23 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     } catch (error: any) {
       console.error(error.message);
     }
+    set({ loading: false })
   },
 
   updateTodo: async (formData: Todo) => {
+    const existingTodo = get().todos.find((todo) => todo.id === formData.id);
+    if (!existingTodo) return;
+
+    const isStatusChanged = existingTodo.status !== formData.status;
+    const isTitleChanged = existingTodo.title !== formData.title;
+    const isDescriptionChanged = existingTodo.description !== formData.description;
+    const isDueChanged = existingTodo.due_date !== formData.due_date;
+    const isPriorityChanged = existingTodo.priority !== formData.priority;
+    const isArchivedChanged = existingTodo.archived !== formData.archived;
+
+    if (!isTitleChanged && !isDescriptionChanged && !isDueChanged && !isPriorityChanged && !isArchivedChanged && !isStatusChanged) return
+
+    set({ loading: true })
     let userID = localStorage.getItem("user-id");
     if (!userID) {
       userID = crypto.randomUUID();
@@ -130,9 +150,11 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     } catch (error: any) {
       console.error(error.message);
     }
+    set({ loading: false })
   },
 
   deleteTodo: async (id: string) => {
+    set({ loading: true })
     const userID = localStorage.getItem("user-id")
     try {
       await axios.delete(`${BASE_URL}/api/todos/${id}`, { params: { user_id: userID } });
@@ -140,8 +162,8 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     } catch (error: any) {
       console.error(error.message);
     }
+    set({ loading: false })
   }
-
 }));
 
 export default useTodoStore;

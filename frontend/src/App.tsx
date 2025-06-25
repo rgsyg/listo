@@ -10,6 +10,9 @@ function App() {
         <SideNav />
         <MainContent />
       </div>
+      <footer className="text-white bg-dark text-center py-2">
+        <small>&copy; 2025 Rigor. All rights reserved.</small>
+      </footer>
       <NewTodoForm />
       <UpdateTodo />
     </div>
