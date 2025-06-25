@@ -23,7 +23,7 @@ export default function SideNavMenu() {
         <i className="bi bi-archive pe-4" />
         <span>Archived Tasks</span>
       </Link>
-      <button
+      {/* <button
         className="btn btn-dark fs-4 w-100 py-2 text-start"
         style={{
           backgroundColor: pathname === "/settings" ? "#424649" : "#212529",
@@ -31,7 +31,7 @@ export default function SideNavMenu() {
       >
         <i className="bi bi-gear pe-4" />
         <span>Settings</span>
-      </button>
+      </button> */}
     </div>
   );
 }

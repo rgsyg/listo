@@ -3,6 +3,10 @@ import useTodoStore, { type Todo } from "../store/useTodoStore";
 import { useLocation } from "react-router-dom";
 import Masonry from "react-masonry-css";
 import TodoCard from "./TodoCard";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import Column from "./Column";
+
+export type ColumnType = { id: string; title: string };
 
 const breakpointColumnsObj = {
   default: 3,
@@ -12,14 +16,36 @@ const breakpointColumnsObj = {
 
 export default function MainContent() {
   const { pathname } = useLocation();
-  const { todos, fetchTodos } = useTodoStore();
+  const { todos, setTodos, fetchTodos, updateTodo } = useTodoStore();
 
   useEffect(() => {
     fetchTodos();
   }, [fetchTodos]);
 
+  const columns: ColumnType[] = [
+    { id: "todo", title: "To Do" },
+    { id: "in_progress", title: "In Progress" },
+    { id: "completed", title: "Completed" },
+  ];
   const archivedTodos: Todo[] = todos.filter((todo) => todo.archived);
-  const finishedTodos: Todo[] = todos.filter((todo) => todo.is_completed);
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const taskId = active.id as string;
+    const newStatus = over.id as Todo["status"];
+
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id === taskId) {
+          updateTodo({ ...todo, status: newStatus });
+          return { ...todo, status: newStatus };
+        } else return todo;
+      })
+    );
+  }
 
   return (
     <div className="bg-light col-9 p-4">
@@ -28,41 +54,21 @@ export default function MainContent() {
         <hr className="opacity-100 bg-black" style={{ height: "2px" }} />
       </header>
       {pathname === "/" ? (
-        <div className="row m-0 row-cols-3">
-          <div className="col m-0 d-flex flex-column gap-4">
-            <div
-              className="card p-3 fw-bold border border-black border-2 fs-5"
-              style={{ backgroundColor: "orange", boxShadow: "8px 6px" }}
-            >
-              TO DO
-            </div>
-            {todos.map(
-              (todo: Todo) =>
-                !todo.archived && !todo.is_completed && <TodoCard todo={todo} />
-            )}
+        <DndContext onDragEnd={handleDragEnd}>
+          <div className="row row-cols-3">
+            {columns.map((column) => {
+              return (
+                <Column
+                  key={column.id}
+                  column={column}
+                  todos={todos.filter((todo) => todo.status === column.id)}
+                />
+              );
+            })}
           </div>
-          <div className="col m-0 d-flex flex-column gap-4">
-            <div
-              className="card p-3 fw-bold border border-black border-2 fs-5"
-              style={{ backgroundColor: "lightskyblue", boxShadow: "8px 6px" }}
-            >
-              IN PROGRESS
-            </div>
-          </div>
-          <div className="col m-0 d-flex flex-column gap-4">
-            <div
-              className="card p-3 fw-bold border border-black border-2 fs-5"
-              style={{ backgroundColor: "lightgreen", boxShadow: "8px 6px" }}
-            >
-              COMPLETE
-            </div>
-            {finishedTodos.map(
-              (todo: Todo) => !todo.archived && <TodoCard todo={todo} />
-            )}
-          </div>
-        </div>
+        </DndContext>
       ) : archivedTodos.length === 0 ? (
-        <div className="">No archived to-dos</div>
+        <div className="">No archived tasks</div>
       ) : (
         <Masonry
           breakpointCols={breakpointColumnsObj}
@@ -70,7 +76,7 @@ export default function MainContent() {
           columnClassName="my-masonry-grid_column"
         >
           {archivedTodos.map((todo: Todo) => (
-            <TodoCard todo={todo} />
+            <TodoCard todo={todo} key={todo.id} />
           ))}
         </Masonry>
       )}

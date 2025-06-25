@@ -37,7 +37,7 @@ export default function UpdateTodo() {
                 await updateTodo({
                   ...todoData,
                   id: todo.id,
-                  is_completed: todo.is_completed,
+                  status: todo.status,
                   archived: todo.archived,
                 });
                 const updateModal = document.getElementById("updateModal");
@@ -57,7 +57,7 @@ export default function UpdateTodo() {
                   className="form-control"
                   id="todo-title"
                   value={todo.title}
-                  onChange={(e) => setTodo({ title: e.target.value })}
+                  onChange={(e) => setTodo({ ...todo, title: e.target.value })}
                   required
                 />
               </div>
@@ -70,7 +70,9 @@ export default function UpdateTodo() {
                   name="description"
                   id="todo-description"
                   value={todo.description}
-                  onChange={(e) => setTodo({ description: e.target.value })}
+                  onChange={(e) =>
+                    setTodo({ ...todo, description: e.target.value })
+                  }
                 />
               </div>
 
@@ -90,7 +92,7 @@ export default function UpdateTodo() {
                   }
                   onChange={(e) => {
                     const selectedDate = new Date(e.target.value);
-                    setTodo({ due_date: selectedDate });
+                    setTodo({ ...todo, due_date: selectedDate });
                   }}
                 />
               </div>
@@ -106,7 +108,7 @@ export default function UpdateTodo() {
                     id="priority-low"
                     checked={todo.priority === "low"}
                     onChange={(e) =>
-                      setTodo({ priority: e.target.value as Priority })
+                      setTodo({ ...todo, priority: e.target.value as Priority })
                     }
                   />
                   <label className="form-check-label" htmlFor="priority-low">
@@ -122,7 +124,7 @@ export default function UpdateTodo() {
                     id="priority-med"
                     checked={todo.priority === "med"}
                     onChange={(e) =>
-                      setTodo({ priority: e.target.value as Priority })
+                      setTodo({ ...todo, priority: e.target.value as Priority })
                     }
                   />
                   <label className="form-check-label" htmlFor="priority-med">
@@ -138,7 +140,7 @@ export default function UpdateTodo() {
                     id="priority-high"
                     checked={todo.priority === "high"}
                     onChange={(e) =>
-                      setTodo({ priority: e.target.value as Priority })
+                      setTodo({ ...todo, priority: e.target.value as Priority })
                     }
                   />
                   <label className="form-check-label" htmlFor="priority-high">

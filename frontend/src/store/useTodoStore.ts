@@ -2,13 +2,14 @@ import { create } from "zustand";
 import axios from "axios";
 
 export type Priority = "low" | "med" | "high";
+export type Status = "todo" | "in_progress" | "completed"
 
 export type Todo = {
-  id: number;
+  id: string;
   user_id: string;
   title: string;
   description: string;
-  is_completed: boolean;
+  status: Status;
   created_at: Date;
   updated_at: Date;
   due_date: Date | string | null;
@@ -21,13 +22,14 @@ export type NewTodo = Omit<Todo, "id" | "created_at" | "updated_at">;
 type TodoStore = {
   todos: Todo[];
   todo: Todo;
-  setTodo: (updatedTodo: Partial<Todo>) => void;
+  setTodo: (updatedTodo: Todo) => void;
+  setTodos: (updatedTodos: Todo[]) => void;
   fetchTodos: () => void;
-  fetchTodo: (id: number) => void;
-  currentTodo: (id: number) => void;
+  fetchTodo: (id: string) => void;
+  currentTodo: (id: string) => void;
   createTodo: (formData: NewTodo) => void;
   updateTodo: (FormData: Todo) => void;
-  deleteTodo: (id: number) => void;
+  deleteTodo: (id: string) => void;
 };
 
 const BASE_URL =
@@ -36,11 +38,11 @@ const BASE_URL =
 const useTodoStore = create<TodoStore>((set, get) => ({
   todos: [
     {
-      id: 0,
+      id: "",
       user_id: "",
       title: "",
       description: "",
-      is_completed: false,
+      status: "todo",
       created_at: new Date(),
       updated_at: new Date(),
       due_date: new Date(),
@@ -50,11 +52,11 @@ const useTodoStore = create<TodoStore>((set, get) => ({
   ],
 
   todo: {
-    id: 0,
+    id: "",
     user_id: "",
     title: "",
     description: "",
-    is_completed: false,
+    status: "todo",
     created_at: new Date(),
     updated_at: new Date(),
     due_date: new Date(),
@@ -62,7 +64,8 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     priority: "low",
   },
 
-  setTodo: (updatedTodo: Partial<Todo>) => set((state) => ({ todo: { ...state.todo, ...updatedTodo } })),
+  setTodo: (updatedTodo: Todo) => set({ todo: updatedTodo }),
+  setTodos: (updatedTodos: Todo[]) => set({ todos: updatedTodos }),
 
   fetchTodos: async () => {
     let userID = localStorage.getItem("user-id");
@@ -81,7 +84,7 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     }
   },
 
-  fetchTodo: async (id: number) => {
+  fetchTodo: async (id: string) => {
     let userID = localStorage.getItem("user-id");
     if (!userID) {
       userID = crypto.randomUUID();
@@ -98,7 +101,7 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     }
   },
 
-  currentTodo: (id: number) => {
+  currentTodo: (id: string) => {
     try {
       const response = get().todos.find((todo) => todo.id === id) as Todo
       set({ todo: response })
@@ -142,7 +145,7 @@ const useTodoStore = create<TodoStore>((set, get) => ({
     }
   },
 
-  deleteTodo: async (id: number) => {
+  deleteTodo: async (id: string) => {
     const userID = localStorage.getItem("user-id")
     try {
       await axios.delete(`${BASE_URL}/api/todos/${id}`, { params: { user_id: userID } });

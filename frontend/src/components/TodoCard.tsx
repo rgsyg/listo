@@ -1,9 +1,13 @@
 import Modal from "bootstrap/js/dist/modal";
 import type { Priority, Todo } from "../store/useTodoStore";
 import useTodoStore from "../store/useTodoStore";
+import { useDraggable } from "@dnd-kit/core";
 
 export default function TodoCard({ todo }: { todo: Todo }) {
   const { currentTodo, updateTodo, deleteTodo } = useTodoStore();
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: todo.id,
+  });
 
   const createBadge = (priority: Priority) => {
     if (priority === "low") {
@@ -15,11 +19,19 @@ export default function TodoCard({ todo }: { todo: Todo }) {
     }
   };
 
+  const style = transform
+    ? {
+        transform: `translate(${transform.x}px, ${transform.y}px)`,
+      }
+    : undefined;
+
   return (
     <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
       className="card p-3 fw-bold border border-black border-2 fs-5"
-      style={{ boxShadow: "8px 6px" }}
-      key={todo.id}
+      style={style}
     >
       <div className="card-body p-0">
         <h5 className="card-title">
@@ -43,13 +55,19 @@ export default function TodoCard({ todo }: { todo: Todo }) {
             ) : (
               <button
                 className="btn btn-light border border-2 border-black"
-                style={{ padding: "0.10rem 0.45rem" }}
-                onClick={() =>
+                style={{
+                  padding: "0.10rem 0.45rem",
+                  backgroundColor:
+                    todo.status === "completed" ? "lightgreen" : "",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
                   updateTodo({
                     ...todo,
-                    is_completed: !todo.is_completed,
-                  })
-                }
+                    status: todo.status === "completed" ? "todo" : "completed",
+                  });
+                }}
+                onPointerDown={(e) => e.stopPropagation()}
               >
                 <i className="bi bi-check2" style={{ fontSize: "1rem" }} />
               </button>
@@ -57,7 +75,8 @@ export default function TodoCard({ todo }: { todo: Todo }) {
             <button
               className="btn btn-light border border-2 border-black"
               style={{ padding: "0.10rem 0.45rem" }}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 currentTodo(todo.id);
                 const updateModal = document.getElementById("updateModal");
                 if (updateModal) {
@@ -65,6 +84,7 @@ export default function TodoCard({ todo }: { todo: Todo }) {
                   modal.show();
                 }
               }}
+              onPointerDown={(e) => e.stopPropagation()}
             >
               <i className="bi bi-pencil" style={{ fontSize: "1rem" }} />
             </button>
@@ -81,14 +101,22 @@ export default function TodoCard({ todo }: { todo: Todo }) {
                   {todo.archived ? (
                     <button
                       className="btn btn-light dropdown-item"
-                      onClick={() => updateTodo({ ...todo, archived: false })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateTodo({ ...todo, archived: false });
+                      }}
+                      onPointerDown={(e) => e.stopPropagation()}
                     >
                       Unarchive
                     </button>
                   ) : (
                     <button
                       className="dropdown-item"
-                      onClick={() => updateTodo({ ...todo, archived: true })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateTodo({ ...todo, archived: true });
+                      }}
+                      onPointerDown={(e) => e.stopPropagation()}
                     >
                       Archive
                     </button>
@@ -97,7 +125,11 @@ export default function TodoCard({ todo }: { todo: Todo }) {
                 <li>
                   <button
                     className="btn btn-light dropdown-item"
-                    onClick={() => deleteTodo(todo.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteTodo(todo.id);
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
                   >
                     Delete
                   </button>
