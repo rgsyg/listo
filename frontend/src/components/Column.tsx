@@ -29,11 +29,10 @@ export default function Column({
         {column.title}
       </div>
       <div ref={setNodeRef} className="d-flex flex-column gap-4">
-        {todos
-          .filter((todo) => !todo.archived)
-          .map((todo) => (
-            <TodoCard key={todo.id} todo={todo} />
-          ))}
+        {todos.length > 0 &&
+          todos
+            .filter((todo) => !todo.archived)
+            .map((todo) => <TodoCard key={todo.id} todo={todo} />)}
         <div
           className="d-flex justify-content-center align-items-center"
           style={{

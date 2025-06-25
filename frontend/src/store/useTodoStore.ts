@@ -36,20 +36,7 @@ const BASE_URL =
   import.meta.env.MODE === "development" ? "http://localhost:5000" : "";
 
 const useTodoStore = create<TodoStore>((set, get) => ({
-  todos: [
-    {
-      id: "",
-      user_id: "",
-      title: "",
-      description: "",
-      status: "todo",
-      created_at: new Date(),
-      updated_at: new Date(),
-      due_date: new Date(),
-      archived: false,
-      priority: "low",
-    },
-  ],
+  todos: [],
 
   todo: {
     id: "",
